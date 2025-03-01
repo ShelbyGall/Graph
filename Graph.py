@@ -1,35 +1,54 @@
 #%%
 import Vertex as v
+from collections import deque
 
 
 class Graph:
+
+
     def __init__(self, vertices: list, edges: dict=None):
         self.vertices = vertices
-        # TODO: immediately add the vertices as keys into the edges dictionary 
         if edges == None:
             self.edges = {}
-
-    def add_edge(self, src: v, dest: v, weight: float=None, directed: bool=True):
-        # check if there already is a edge added for the src vertex
-        if self.edges.get(src):
-            # if there is an edge, just append the new edge
-            self.edges[src].append([dest, weight])
+            # if no edges were passed into the constructor, 
+            # populate the edges to be the empty lists meaning
+            # no vertices are connected in the graph
+            for v in self.vertices:
+                self.edges[v] = []
         else:
-            # if there are no edges create list with the newly created edge
-            self.edges[src] = [[dest, weight]]
-        
-        # if the edge isnt directed this means we need to add the edge both ways
-        # repeat code block above
-        if not directed:
-            if self.edges.get(dest):
-                self.edges[dest].append([src, weight])
-            else:
-                self.edges[dest] = [[src, weight]]
+            self.edges = edges
+    
 
-    def is_connected(self, src: v, dest: v):
-        if self.edges.get(src) == None:
-            return False
+    def add_vertex(self, vertex: v) -> None:
+        # if the vertex isn't already in the graph then add the vertex
+        # to both the vertices list and the edges dict
+        if self.edges.get(vertex) == None:
+            self.vertices.append(vertex)
+            self.edges[vertex] = []
+
+
+    def add_edge(self, src: v, dest: v, weight: float=None, directed: bool=True) -> None:
+        # if either the src or dest vertices arent in the graph, dont add the edge
+        if (self.edges.get(src) == None) or (self.edges.get(dest) == None):
+            print("Error: Vertex not in graph")
+            return 
         
+        # if the src and dest vertices aren't already connected, add the edge
+        if not self.is_connected(src, dest):
+            # add new edge
+            self.edges[src].append([dest, weight])
+            
+            # if the edge isnt directed this means we need to add the edge both ways
+            if not directed:
+                # if the src and dest vertices aren't already connected, add the edge
+                if not self.is_connected(dest, src):
+                    self.edges[dest].append([src, weight])
+
+
+    def is_connected(self, src: v, dest: v) -> bool:
+        # get the list of edges in the dict at the src key
+        # iterate through that list and check if any of the 
+        # adjacent vertices in the list are the dest vertex
         for e in self.edges.get(src):
             if e[0] == dest:
                 return True
@@ -54,14 +73,12 @@ v1 = v.Vertex('1', {"branch name":"Scranton"})
 v2 = v.Vertex('2')
 v3 = v.Vertex('3')
 v4 = v.Vertex('4')
+v5 = v.Vertex('5')
 
+print(v1)
+print(v2)
 
 vertices = [v1,v2,v3,v4]
-
-#%%
-print(v2)
-print(v1)
-
 
 #%%
 
@@ -72,6 +89,8 @@ my_graph.add_edge(src=v1, dest=v3, directed=False)
 my_graph.add_edge(src=v3, dest=v2)
 my_graph.add_edge(src=v4, dest=v1)
 
+my_graph.add_edge(src=v5, dest=v2)
 # %%
 print(my_graph)
+
 # %%
