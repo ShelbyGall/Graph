@@ -56,10 +56,33 @@ class Graph:
         return False
 
     # TODO: BFS, DFS, Dijkstras
+    def bfs(self, src: v, dest: v) -> None:
+        visited: set = set()
+        queue: deque = deque()
+
+        queue.append(src)
+        while len(queue) != 0:
+            curr_ver = queue.popleft()
+
+            if curr_ver in visited:
+                continue
+
+            visited.add(curr_ver)
+
+            print(curr_ver)
+
+            if curr_ver == dest:
+                print("found")
+                return
+
+            for adj_ver in self.edges.get(curr_ver):
+                if adj_ver[0] not in visited:
+                    queue.append(adj_ver[0])
+            
 
     def __str__(self) -> str:
-        ret_str = ""
-        temp = []
+        ret_str: str = ""
+        temp: list = []
         for v in self.vertices:
             temp.append(f"{v.get_label()} -> ")
             if self.edges.get(v) != None:
@@ -74,23 +97,41 @@ v2 = v.Vertex('2')
 v3 = v.Vertex('3')
 v4 = v.Vertex('4')
 v5 = v.Vertex('5')
+v6 = v.Vertex('6')
+v7 = v.Vertex('7')
+v8 = v.Vertex('8')
 
 print(v1)
 print(v2)
 
 vertices = [v1,v2,v3,v4]
 
-#%%
-
 my_graph = Graph(vertices=vertices)
 
-# %%
 my_graph.add_edge(src=v1, dest=v3, directed=False)
 my_graph.add_edge(src=v3, dest=v2)
 my_graph.add_edge(src=v4, dest=v1)
 
 my_graph.add_edge(src=v5, dest=v2)
-# %%
+
 print(my_graph)
+
+# %%
+vertices2 = [v1,v2,v3,v4,v5,v6,v7,v8]
+g2 = Graph(vertices=vertices2)
+
+g2.add_edge(src=v1, dest=v2, directed=False)
+g2.add_edge(src=v1, dest=v3, directed=False)
+g2.add_edge(src=v1, dest=v4, directed=False)
+
+g2.add_edge(src=v3, dest=v6, directed=False)
+# g2.add_edge(src=v3, dest=v7, directed=False)
+g2.add_edge(src=v4, dest=v7, directed=False)
+
+g2.add_edge(src=v6, dest=v8, directed=False)
+
+g2.bfs(v1,v8)
+
+
 
 # %%
