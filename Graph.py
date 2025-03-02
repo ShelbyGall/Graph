@@ -55,30 +55,137 @@ class Graph:
             
         return False
 
-    # TODO: BFS, DFS, Dijkstras
+
+    
     def bfs(self, src: v, dest: v) -> None:
+        # visited set to keep track of vertices we've already visited
         visited: set = set()
+        # queue used for exploring adjacent vertices
         queue: deque = deque()
 
+        # add the src vertex to the queue 
         queue.append(src)
+        # keep checking the queue to see if its empty
+        # if the queue is empty; searching is complete
+        # and the search was unsuccessful
         while len(queue) != 0:
+            # grab the current vertex from the queue
             curr_ver = queue.popleft()
 
+            # if the current vertex has already been visited then go to next
+            # iteration
             if curr_ver in visited:
                 continue
-
+            
+            # if the current vertex hasnt been visited, then add it 
+            # to the visited vertex to show we are visiting it
             visited.add(curr_ver)
 
+            # "visit" the current vertex
             print(curr_ver)
 
+            # if the current vertex is what we are searching for then 
+            # return and the search is successful
             if curr_ver == dest:
                 print("found")
                 return
 
+            # if current vertex isnt what we are searching for then
+            # add all adjacent vertices of the current vertex to the 
+            # exploration queue as long as the adjacent vertex hasnt 
+            # already been visited
             for adj_ver in self.edges.get(curr_ver):
                 if adj_ver[0] not in visited:
                     queue.append(adj_ver[0])
-            
+        
+        # search was unsuccessful
+        print(f"{dest} cannot be found from {src}")
+    
+
+    def dfs(self, src: v, dest: v) -> None:
+        # visited set to keep track of vertices we've already visited
+        visited: set = set()
+        # stack used for exploring adjacent vertices
+        stack: deque = deque()
+
+        # add the src vertex to the stack
+        stack.append(src)
+        # keep checking the stack to see if its empty
+        # if the stack is empty; searching is complete
+        # and the search was unsuccessful
+        while len(stack) != 0:
+            # grab the current vertex from the stack
+            curr_ver = stack.pop()
+
+            # if the current vertex has already been visited then go to next
+            # iteration
+            if curr_ver in visited:
+                continue
+
+            # if the current vertex hasnt been visited, then add it 
+            # to the visited vertex to show we are visiting it
+            visited.add(curr_ver)
+
+            # "visit" the current vertex
+            print(curr_ver)
+
+            # if the current vertex is what we are searching for then 
+            # return and the search is successful
+            if curr_ver == dest:
+                print("found")
+                return
+
+            # if current vertex isnt what we are searching for then
+            # add all adjacent vertices of the current vertex to the 
+            # exploration stack as long as the adjacent vertex hasnt 
+            # already been visited
+            for adj_ver in self.edges.get(curr_ver):
+                if adj_ver[0] not in visited:
+                    stack.append(adj_ver[0])
+        
+        # search was unsuccessful
+        print(f"{dest} cannot be found from {src}")
+
+
+    def dfs_recursive(self, src: v, dest: v) -> None:
+        # visited set to keep track of vertices we've already visited
+        visited: set = set()
+        # call helper recursive funciton with the visited set as a parameter
+        found = self.__dfs_recur_helper__(src, dest, visited)
+        # if the recursive function doesnt return True then the dest vertex was not found
+        if not found:
+            print(f"{dest} cannot be found from {src}")
+
+    def __dfs_recur_helper__(self, src: v, dest: v, visited: set):
+        # if the current vertex has already been visited go to next function call
+        if src in visited:
+            return
+        
+        # if the current vertex hasnt been visited, then add it 
+        # to the visited vertex to show we are visiting it
+        visited.add(src)
+
+        # "visit" the current vertex
+        print(src)
+
+        # if the current vertex is what we are searching for then 
+        # return and the search is successful
+        if src == dest:
+            print("found")
+            return True
+        
+        # if current vertex isnt what we are searching for then
+        # recursively perform dfs on all adjacent vertices 
+        for adj_ver in self.edges.get(src):
+            if adj_ver[0] not in visited:
+                found = self.__dfs_recur_helper__(adj_ver[0], dest, visited)
+                # if the vertex has been found from the recursive funciton call
+                # then return True denoting that the dest vertex has been found
+                if found: 
+                    return True
+
+
+    # TODO: Dijkstras, MST, Disjoint sets, topological sort
 
     def __str__(self) -> str:
         ret_str: str = ""
@@ -125,13 +232,27 @@ g2.add_edge(src=v1, dest=v3, directed=False)
 g2.add_edge(src=v1, dest=v4, directed=False)
 
 g2.add_edge(src=v3, dest=v6, directed=False)
-# g2.add_edge(src=v3, dest=v7, directed=False)
+g2.add_edge(src=v3, dest=v7, directed=False)
 g2.add_edge(src=v4, dest=v7, directed=False)
 
 g2.add_edge(src=v6, dest=v8, directed=False)
 
 g2.bfs(v1,v8)
+print()
+g2.dfs(v1,v8)
+print()
+g2.dfs_recursive(v1,v8)
+print()
 
 
+# %%
+v999 = v.Vertex('999')
+g2.add_vertex(v999)
 
+g2.bfs(v1,v999)
+print()
+g2.dfs(v1,v999)
+print()
+g2.dfs_recursive(v1,v999)
+print()
 # %%
