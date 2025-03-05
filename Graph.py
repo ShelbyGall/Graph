@@ -213,7 +213,6 @@ class Graph:
 
             # if the current vertex has already been visited then go to next
             # iteration
-
             if curr_ver in visited:
                 continue
             
@@ -224,24 +223,13 @@ class Graph:
             # "visit" the current vertex
             print(curr_ver)
             
-
             # if the current vertex is what we are searching for then 
             # return and the search is successful
             if curr_ver == dest:
                 print("found")
-
-                # return the list of vertices along the shortest path
-                # from src to dest and the weight it took to get there
-                path = []
-                path.append(dest)
-                c = v_to.get(dest)
-                
-                while True:
-                    path.append(c)
-                    if c == src:
-                        return (w_to.get(dest), path[::-1])
-                    c = v_to.get(c)
-                    
+                # returns a tuple generated from the variables populated in this funciton
+                # and are gives as (weight of shortest path between src and dest, vertices along the shortest path)
+                return self.__short_path_return__(src=src, dest=dest,v_to=v_to,w_to=w_to)
 
             # if current vertex isnt what we are searching for then
             # add all adjacent vertices of the current vertex to the 
@@ -258,9 +246,21 @@ class Graph:
                         w_to.update({adj_ver[0]:adj_ver[1] + w_to.get(curr_ver)})
                         v_to.update({adj_ver[0]: curr_ver})
 
-    # TODO: REFACTOR SHORTEST PATH SO ITS SIMPLER TO READ. MST, Disjoint sets, topological sort APPLICATION
         
+    def __short_path_return__(self, src:v, dest: v, v_to: dict, w_to: dict) -> tuple[int, list]:
+        # return the list of vertices along the shortest path
+        # from src to dest and the weight it took to get there
+        path = []
+        path.append(dest)
+        c = v_to.get(dest)
         
+        while True:
+            path.append(c)
+            if c == src:
+                return (w_to.get(dest), path[::-1])
+            c = v_to.get(c)
+
+    # TODO: MST, Disjoint sets, topological sort APPLICATION
 
     def __str__(self) -> str:
         ret_str: str = ""
