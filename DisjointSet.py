@@ -21,6 +21,7 @@ class DisjointSet:
         self.parent[par1] = par2
 #%%
 
-
+l = ['a','b','c','d']
+ds = DisjointSet(l)
 
 # %%
