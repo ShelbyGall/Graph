@@ -2,6 +2,7 @@
 import Vertex as v
 from collections import deque
 import heapq
+from DisjointSet import DisjointSet
 
 
 
@@ -187,7 +188,8 @@ class Graph:
                     return True
 
 
-    def shortest_path(self, src: v, dest: v) -> tuple:
+    def shortest_path(self, src: v, dest: v) -> tuple[int, list]:
+
         # dict to keep track of the vertices that connect to each other
         # on the shortest path from src to dest
         v_to: dict = dict(zip(self.vertices, [None]*len(self.vertices)))
@@ -201,15 +203,25 @@ class Graph:
         # use a priority queue/heap for exploring adjacent vertices
         queue: list = []
 
+        # due to heapq restrictions of tuple comparisons when the
+        # two tuples have the same priority(weight) but with non-comparable tasks(Vertex)
+        # we can store a counter as the second value in the tuple which will count up 
+        # every time a edge is passed into the priority queue and when two edges of equal weights 
+        # are compared, the tuple comparison will compare the counts which will never be the same
+        #  Before: (weight, vertex)             if weights are equal then it attempts to compare vertex(cant be done)
+        #  After: (weight, count, vertex)       if weights are equal then it compares count
+        count = 0
+
         # add the src vertex to the queue 
-        heapq.heappush(queue, (0,src))
+        heapq.heappush(queue, (0, count,src))
 
         # keep checking the queue to see if its empty
         # if the queue is empty; searching is complete
         # and the search was unsuccessful
         while len(queue) != 0:
+            print('here')
             # grab the current vertex from the queue
-            _, curr_ver = heapq.heappop(queue)
+            _, _, curr_ver = heapq.heappop(queue)
 
             # if the current vertex has already been visited then go to next
             # iteration
@@ -237,7 +249,9 @@ class Graph:
             # already been visited
             for adj_ver in self.edges.get(curr_ver):
                 if adj_ver[0] not in visited:
-                    heapq.heappush(queue, (adj_ver[1], adj_ver[0]))
+                    # increment the counter to allow the comparison of equal weights in the heapq(priority queue)
+                    count += 1
+                    heapq.heappush(queue, (adj_ver[1], count, adj_ver[0]))
 
                     # if there is no shortest weight recorded in w_to for the adjacent vertex
                     # or the newly discovered paths weight is smaller than the weight recorded in w_to for the adjacent vertex
@@ -261,6 +275,11 @@ class Graph:
             c = v_to.get(c)
 
     # TODO: MST, Disjoint sets, topological sort APPLICATION
+
+    def kruskals_mst(self) -> tuple[int, list]:
+        dsu = DisjointSet(self.vertices)
+        sorted_edges = self.edges()
+
 
     def __str__(self) -> str:
         ret_str: str = ""
@@ -330,12 +349,31 @@ print()
 # %%
 
 g3 = Graph(vertices=[v1,v2,v3,v4,v5])
-g3.add_edge(src=v1, dest=v2, weight=5,directed=False)
-g3.add_edge(src=v1, dest=v3, weight=1,directed=False)
 
-g3.add_edge(src=v3, dest=v4, weight=3,directed=False)
-g3.add_edge(src=v3, dest=v5, weight=1,directed=False)
-g3.add_edge(src=v5, dest=v2, weight=2,directed=False)
+g3.add_edge(src=v1, dest=v2, weight=10,directed=False)
+g3.add_edge(src=v1, dest=v3, weight=1,directed=False)
+g3.add_edge(src=v1, dest=v4, weight=10,directed=False)
+
+g3.add_edge(src=v2, dest=v5, weight=3,directed=False)
+
+g3.add_edge(src=v3, dest=v5, weight=15,directed=False)
+
+g3.add_edge(src=v4, dest=v3, weight=1,directed=False)
 
 w, path  = g3.shortest_path(v1,v2)
+# %%
+g4 = Graph(vertices=[v1,v2,v3,v4,v5])
+
+g4.add_edge(src=v1, dest=v2, weight=11,directed=False)
+g4.add_edge(src=v1, dest=v3, weight=1,directed=False)
+g4.add_edge(src=v1, dest=v4, weight=12,directed=False)
+
+g4.add_edge(src=v2, dest=v5, weight=3,directed=False)
+
+g4.add_edge(src=v3, dest=v5, weight=15,directed=False)
+
+g4.add_edge(src=v4, dest=v3, weight=2,directed=False)
+
+w, path  = g4.shortest_path(v1,v2)
+
 # %%

@@ -1,4 +1,4 @@
-# %%
+
 class DisjointSet:
 
     def __init__(self, items: list):
@@ -20,7 +20,6 @@ class DisjointSet:
 
         self.parent[par1] = par2
 
-# %%
-l = ['a','b','c','d']
-ds = DisjointSet(l)
-# %%
+if __name__ == '__main__':
+    l = ['a','b','c','d']
+    ds = DisjointSet(l)
