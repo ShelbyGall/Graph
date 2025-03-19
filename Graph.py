@@ -39,13 +39,13 @@ class Graph:
         # if the src and dest vertices aren't already connected, add the edge
         if not self.is_connected(src, dest):
             # add new edge
-            self.edges[src].append([dest, weight])
+            self.edges[src].append([src, dest, weight])
             
             # if the edge isnt directed this means we need to add the edge both ways
             if not directed:
                 # if the src and dest vertices aren't already connected, add the edge
                 if not self.is_connected(dest, src):
-                    self.edges[dest].append([src, weight])
+                    self.edges[dest].append([dest, src, weight])
 
 
     def is_connected(self, src: v, dest: v) -> bool:
@@ -53,7 +53,7 @@ class Graph:
         # iterate through that list and check if any of the 
         # adjacent vertices in the list are the dest vertex
         for e in self.edges.get(src):
-            if e[0] == dest:
+            if e[1] == dest:
                 return True
             
         return False
@@ -98,8 +98,8 @@ class Graph:
             # exploration queue as long as the adjacent vertex hasnt 
             # already been visited
             for adj_ver in self.edges.get(curr_ver):
-                if adj_ver[0] not in visited:
-                    queue.append(adj_ver[0])
+                if adj_ver[1] not in visited:
+                    queue.append(adj_ver[1])
         
         # search was unsuccessful
         print(f"{dest} cannot be found from {src}")
@@ -143,8 +143,8 @@ class Graph:
             # exploration stack as long as the adjacent vertex hasnt 
             # already been visited
             for adj_ver in self.edges.get(curr_ver):
-                if adj_ver[0] not in visited:
-                    stack.append(adj_ver[0])
+                if adj_ver[1] not in visited:
+                    stack.append(adj_ver[1])
         
         # search was unsuccessful
         print(f"{dest} cannot be found from {src}")
@@ -180,8 +180,8 @@ class Graph:
         # if current vertex isnt what we are searching for then
         # recursively perform dfs on all adjacent vertices 
         for adj_ver in self.edges.get(src):
-            if adj_ver[0] not in visited:
-                found = self.__dfs_recur_helper__(adj_ver[0], dest, visited)
+            if adj_ver[1] not in visited:
+                found = self.__dfs_recur_helper__(adj_ver[1], dest, visited)
                 # if the vertex has been found from the recursive funciton call
                 # then return True denoting that the dest vertex has been found
                 if found: 
@@ -213,7 +213,7 @@ class Graph:
         count = 0
 
         # add the src vertex to the queue 
-        heapq.heappush(queue, (0, count,src))
+        heapq.heappush(queue, (0, count, src))
 
         # keep checking the queue to see if its empty
         # if the queue is empty; searching is complete
@@ -248,17 +248,17 @@ class Graph:
             # exploration queue as long as the adjacent vertex hasnt 
             # already been visited
             for adj_ver in self.edges.get(curr_ver):
-                if adj_ver[0] not in visited:
+                if adj_ver[1] not in visited:
                     # increment the counter to allow the comparison of equal weights in the heapq(priority queue)
                     count += 1
-                    heapq.heappush(queue, (adj_ver[1], count, adj_ver[0]))
+                    heapq.heappush(queue, (adj_ver[2], count, adj_ver[1]))
 
                     # if there is no shortest weight recorded in w_to for the adjacent vertex
                     # or the newly discovered paths weight is smaller than the weight recorded in w_to for the adjacent vertex
-                    if (w_to.get(adj_ver[0]) == None) or (w_to.get(adj_ver[0]) > adj_ver[1] + w_to.get(curr_ver)):
+                    if (w_to.get(adj_ver[1]) == None) or (w_to.get(adj_ver[1]) > adj_ver[2] + w_to.get(curr_ver)):
                         # update the w_to and v_to with the newly discovered path
-                        w_to.update({adj_ver[0]:adj_ver[1] + w_to.get(curr_ver)})
-                        v_to.update({adj_ver[0]: curr_ver})
+                        w_to.update({adj_ver[1]:adj_ver[2] + w_to.get(curr_ver)})
+                        v_to.update({adj_ver[1]: curr_ver})
 
         
     def __short_path_return__(self, src:v, dest: v, v_to: dict, w_to: dict) -> tuple[int, list]:
@@ -275,20 +275,22 @@ class Graph:
             c = v_to.get(c)
 
 
-    def get_formatted_edges(self) -> list[tuple]:
-        f_edges: list = []
-        for v in g3.edges:
-            for e in g3.edges[v]:
-                f_edges.append((e[1], v, e[0]))
-        return f_edges
 
 
-    def kruskals_mst(self, formatted_edges: list) -> tuple[int, list]:
+    def kruskals_mst(self) -> tuple[int, list]:
         # create the disjoint set to account for cycles/connectivity
         ds = DisjointSet(self.vertices)
         
+        # TODO: rewrite this so that the time complextiy isnt O(V*E)
+        all_edges = []
+        for k in self.edges.keys():
+            for e in self.edges.get(k):
+                all_edges.append(e)
+        #=========================================================
+
+
         # sort our edges
-        sorted_edges = sorted(formatted_edges, key=lambda tup: tup[0])
+        sorted_edges = sorted(all_edges, key=lambda e: e[2])
 
         # init the cost of the current mst
         cost: int = 0
@@ -299,15 +301,15 @@ class Graph:
         # iterate over our sorted edges
         for edge in sorted_edges:
             # find the disjoint set "representatives"(root) of the vertices in our current edge
-            par1 = ds.find(edge[1])
-            par2 = ds.find(edge[2])
+            par1 = ds.find(edge[0])
+            par2 = ds.find(edge[1])
 
             # if the current edge being looked at doesnt create a cycle,
             # chose the edge, update the cost and connect them in the disjoint set
             if par1 != par2:
                 edges_picked.append(edge)
-                cost += edge[0]
-                ds.union(edge[1], edge[2])
+                cost += edge[2]
+                ds.union(edge[0], edge[1])
             
             # if we have chosen V - 1 edges then our MST will be complete
             if len(edges_picked) == len(self.vertices) - 1:
@@ -323,7 +325,7 @@ class Graph:
             temp.append(f"{v.get_label()} -> ")
             if self.edges.get(v) != None:
                 for e in self.edges.get(v):
-                    temp.append(f"{e[0].get_label()} -> ")
+                    temp.append(f"{e[1].get_label()} -> ")
             temp.append("\n")
         return ret_str.join(temp)
 #%%
