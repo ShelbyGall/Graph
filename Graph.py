@@ -284,14 +284,11 @@ class Graph:
 
 
     def kruskals_mst(self, formatted_edges: list) -> tuple[int, list]:
-        # create the disjoint set to account for cycles
+        # create the disjoint set to account for cycles/connectivity
         ds = DisjointSet(self.vertices)
         
         # sort our edges
         sorted_edges = sorted(formatted_edges, key=lambda tup: tup[0])
-
-        # init number of currently chosen edges to 0
-        num_edges_picked = 0
 
         # init the cost of the current mst
         cost: int = 0
@@ -305,16 +302,15 @@ class Graph:
             par1 = ds.find(edge[1])
             par2 = ds.find(edge[2])
 
-            # if the current edges being looked at doesnt create a cycle,
+            # if the current edge being looked at doesnt create a cycle,
             # chose the edge, update the cost and connect them in the disjoint set
             if par1 != par2:
-                num_edges_picked += 1
-                cost += edge[0]
                 edges_picked.append(edge)
+                cost += edge[0]
                 ds.union(edge[1], edge[2])
             
             # if we have chosen V - 1 edges then our MST will be complete
-            if num_edges_picked == len(self.vertices) - 1:
+            if len(edges_picked) == len(self.vertices) - 1:
                 return (cost, edges_picked)
 
 
