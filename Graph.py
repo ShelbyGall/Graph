@@ -48,6 +48,17 @@ class Graph:
                     self.edges[dest].append([dest, src, weight])
 
 
+    def get_edges(self):
+        all_edges = []
+        # iterate though all vertices
+        for k in self.edges.keys():
+            # iterate though the current vertex's adjacent edges
+            for e in self.edges.get(k):
+                # add it to a list
+                all_edges.append(e)
+        return all_edges
+
+
     def is_connected(self, src: v, dest: v) -> bool:
         # get the list of edges in the dict at the src key
         # iterate through that list and check if any of the 
@@ -281,15 +292,10 @@ class Graph:
         # create the disjoint set to account for cycles/connectivity
         ds = DisjointSet(self.vertices)
         
-        # TODO: rewrite this so that the time complextiy isnt O(V*E)
-        all_edges = []
-        for k in self.edges.keys():
-            for e in self.edges.get(k):
-                all_edges.append(e)
-        #=========================================================
+        # get all edges in the graph
+        all_edges = self.get_edges()
 
-
-        # sort our edges
+        # sort our edges by their weight
         sorted_edges = sorted(all_edges, key=lambda e: e[2])
 
         # init the cost of the current mst

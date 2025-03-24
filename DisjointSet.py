@@ -19,9 +19,3 @@ class DisjointSet:
         par2 = self.find(item2)
 
         self.parent[par1] = par2
-#%%
-
-l = ['a','b','c','d']
-ds = DisjointSet(l)
-
-# %%
