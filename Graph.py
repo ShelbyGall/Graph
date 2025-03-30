@@ -30,6 +30,25 @@ class Graph:
             self.edges[vertex] = []
 
 
+    def delete_vertex(self, vertex: v) -> None:
+        # check if the vertex is in the graph
+        if self.edges.get(vertex):
+
+            # remove vertex from vertices list
+            self.vertices.remove(vertex)
+
+            # check all vertices edge list for the vertex to be deleted
+            for e in self.edges.keys():
+                # dont need to perform delete_edge on the vertex to be deleted
+                # in the edges dict as it will be wasted time
+                if e != vertex:
+                    # delete the edge between current edge and the vertex to be deleted
+                    self.delete_edge(e, vertex)
+
+            # remove vertex from edges dict
+            self.edges.pop(vertex)
+
+
     def add_edge(self, src: v, dest: v, weight: float=None, directed: bool=True) -> None:
         # if either the src or dest vertices arent in the graph, dont add the edge
         if (self.edges.get(src) == None) or (self.edges.get(dest) == None):
@@ -47,8 +66,21 @@ class Graph:
                 if not self.is_connected(dest, src):
                     self.edges[dest].append([dest, src, weight])
 
+    
+    def delete_edge(self, src: v, dest: v) -> None:
+        # check if the src and dest vertices exist in the graph and if they are connected
+        if self.edges.get(src) and self.edges.get(dest) and self.is_connected(src, dest):
+            # get the src list of edges
+            curr_edges: list = self.edges.get(src)
+            # iterate over src edge list to find the correct edge
+            for e in curr_edges:
+                if e[0] == src and e[1] == dest:
+                    curr_edges.remove(e)
+            
+        
 
-    def get_edges(self):
+
+    def get_edges(self) -> list:
         all_edges = []
         # iterate though all vertices
         for k in self.edges.keys():
@@ -334,6 +366,14 @@ class Graph:
                     temp.append(f"{e[1].get_label()} -> ")
             temp.append("\n")
         return ret_str.join(temp)
+    
+    def __repr__(self) -> str:
+        return f"graph: {self.vertices}"
+
+
+
+    
+
 #%%
 
 v1 = v.Vertex('1')

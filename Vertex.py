@@ -10,4 +10,7 @@ class Vertex:
         return self.data
     
     def __str__(self) -> str:
-        return f"{self.label}, {self.data}"
+        return f"{self.label}|{self.data}"
+    
+    def __repr__(self) -> str:
+        return f"{self.label}|{self.data}"
