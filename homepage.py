@@ -9,17 +9,21 @@ from PyQt5.QtWidgets import (QApplication,
 from PyQt5.QtCore import QSize
 
 import sys
+from QVertex import QVertex
+
 
 class MainWindow(QMainWindow):
     def __init__(self: QMainWindow):
         super().__init__()
+
+            
 
         # set the title of the window
         self.setWindowTitle("Graph Visualization")
 
         # set the minimum size of the window
         self.setMinimumSize(QSize(500,300))
-        # create a layout and add it ass the central widget of the window
+        # create a layout and add it as the central widget of the window
         self.layout = QVBoxLayout()
 
         self.label = QLabel()
@@ -32,6 +36,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.input)
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.button)
+        
 
         self.container = QWidget()
         self.container.setLayout(self.layout)
@@ -43,8 +48,15 @@ class MainWindow(QMainWindow):
 
     def create_vertex_button(self):
         print("vertex created")
+        v = QVertex()
+        self.layout.addWidget(v)
+
 
 app = QApplication(sys.argv)
+
+with open("style.qss", "r") as f:
+    _style = f.read()
+    app.setStyleSheet(_style)
 
 window = MainWindow()
 window.show()
