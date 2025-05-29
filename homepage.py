@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import (QApplication, 
                              QMainWindow, 
                              QPushButton, 
-                             QLabel, 
                              QLineEdit,
                              QVBoxLayout,
+                             QHBoxLayout,
                              QWidget,
+                             QFrame
                              )
 from PyQt5.QtCore import QSize
 
@@ -16,49 +17,76 @@ class MainWindow(QMainWindow):
     def __init__(self: QMainWindow):
         super().__init__()
 
-            
-
         # set the title of the window
         self.setWindowTitle("Graph Visualization")
 
         # set the minimum size of the window
-        self.setMinimumSize(QSize(500,300))
-        # create a layout and add it as the central widget of the window
-        self.layout = QVBoxLayout()
-
-        self.label = QLabel()
-        self.input = QLineEdit()
-        self.input.textChanged.connect(self.label.setText)
-
-        self.button = QPushButton("Create a Vertex")
-        self.button.clicked.connect(self.create_vertex_button)
-
-        self.layout.addWidget(self.input)
-        self.layout.addWidget(self.label)
-        self.layout.addWidget(self.button)
+        self.setMinimumSize(QSize(1000,500))
         
-
-        self.container = QWidget()
-        self.container.setLayout(self.layout)
         
-    
+        # create vertex button for action bar
+        create_vertex_button = QPushButton("Create a Vertex")
+        create_vertex_button.clicked.connect(self.create_vertex)
 
-        self.setCentralWidget(self.container)
+        # create graph button for action bar
+        create_graph_button = QPushButton("Create a Graph")
+        create_graph_button.clicked.connect(self.create_graph)
+
+        # create the widget and layout for our action bar
+        action_bar = QFrame()
+        action_bar_layout = QVBoxLayout()
+
+        # add our buttons to the action bar layout
+        action_bar_layout.addWidget(create_vertex_button)
+        action_bar_layout.addWidget(create_graph_button)
+
+        # set the layout of our action bar
+        action_bar.setLayout(action_bar_layout)
 
 
-    def create_vertex_button(self):
+        # the graph VISUALIZATION stuff thingy
+        canvas = QFrame()
+        self.canvas_layout = QHBoxLayout()
+
+        # line = QLineEdit()
+        # self.canvas_layout.addWidget(line)
+
+        canvas.setLayout(self.canvas_layout)
+
+
+
+        # create the widget and layout for our main window container
+        main_container = QFrame()
+        main_container_layout = QHBoxLayout()
+
+        # add our widgets to the layout
+        main_container_layout.addWidget(action_bar)
+        main_container_layout.addWidget(canvas)
+
+        # set the layout of the main container
+        main_container.setLayout(main_container_layout)
+
+        # add the main container widget as the central widget
+        self.setCentralWidget(main_container)
+
+    def create_vertex(self):
         print("vertex created")
         v = QVertex()
-        self.layout.addWidget(v)
+        self.canvas_layout.addWidget(v)
+
+    def create_graph(self):
+        print("graph created")
+        
 
 
-app = QApplication(sys.argv)
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
 
-with open("style.qss", "r") as f:
-    _style = f.read()
-    app.setStyleSheet(_style)
+    with open("style.css", "r") as f:
+        _style = f.read()
+        app.setStyleSheet(_style)
 
-window = MainWindow()
-window.show()
+    window = MainWindow()
+    window.show()
 
-app.exec()
+    app.exec()

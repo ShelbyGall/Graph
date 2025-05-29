@@ -1,0 +1,29 @@
+QPushButton {
+    background-color: red;
+    color: white;
+}
+
+QFrame {
+    border: 1px solid blue;
+    border-radius: 50px;
+    margin: 1em;
+    padding: 1em;
+}
+
+QVertex {
+    background-color: aqua;
+    min-height: 1em;
+    max-height: 5em;
+    min-width: 1em;
+    max-width: 5em;
+    margin: 0px;
+    padding:0px;
+    spacing: 10px;
+}
+
+QVertex QPushButton {
+    background-color: blueviolet;
+    font-weight: bold;
+
+}
+
