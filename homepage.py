@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
 
         # create the widget and layout for our action bar
         action_bar = QFrame()
+        action_bar.setObjectName("action_bar")
         action_bar_layout = QVBoxLayout()
 
         # add our buttons to the action bar layout
@@ -46,6 +47,7 @@ class MainWindow(QMainWindow):
 
         # the graph VISUALIZATION stuff thingy
         canvas = QFrame()
+        canvas.setObjectName("canvas")
         self.canvas_layout = QHBoxLayout()
 
         # line = QLineEdit()
@@ -57,11 +59,12 @@ class MainWindow(QMainWindow):
 
         # create the widget and layout for our main window container
         main_container = QFrame()
+        main_container.setObjectName("main_container")
         main_container_layout = QHBoxLayout()
 
         # add our widgets to the layout
-        main_container_layout.addWidget(action_bar)
-        main_container_layout.addWidget(canvas)
+        main_container_layout.addWidget(action_bar,1)
+        main_container_layout.addWidget(canvas,4)
 
         # set the layout of the main container
         main_container.setLayout(main_container_layout)
@@ -72,6 +75,7 @@ class MainWindow(QMainWindow):
     def create_vertex(self):
         print("vertex created")
         v = QVertex()
+        v.setObjectName('vertex') 
         self.canvas_layout.addWidget(v)
 
     def create_graph(self):

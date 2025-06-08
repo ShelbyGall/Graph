@@ -1,5 +1,5 @@
 QPushButton {
-    background-color: red;
+    background-color: green;
     color: white;
 }
 
@@ -27,3 +27,6 @@ QVertex QPushButton {
 
 }
 
+QFrame#action_bar {
+    background-color: aqua;
+}
