@@ -5,9 +5,14 @@ from PyQt5.QtWidgets import (QApplication,
                              QVBoxLayout,
                              QHBoxLayout,
                              QWidget,
-                             QFrame
+                             QFrame,
+                             QDockWidget,
+                             QAction
                              )
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
+
+from PyQt5.QtGui import QIcon
+
 
 import sys
 from QVertex import QVertex
@@ -20,10 +25,33 @@ class MainWindow(QMainWindow):
         # set the title of the window
         self.setWindowTitle("Graph Visualization")
 
+        # set the window icon
+        self.setWindowIcon(QIcon('./assets/icon.png'))
+
         # set the minimum size of the window
         self.setMinimumSize(QSize(1000,500))
-        
-        
+
+        # create the menu bar
+        menu_bar = self.menuBar()
+
+        # add items to the menu bar
+        help_menu = menu_bar.addMenu('&Help')
+        view_menu = menu_bar.addMenu('&View')
+
+        # help menu actions
+        about_action = QAction(QIcon('./assets/about.png'), 'About', self)
+        help_menu.addAction(about_action)
+        about_action.setStatusTip('About')
+        about_action.setShortcut('F1')
+
+        # view menu actions
+        show_dock_action = QAction(QIcon('./assets/show_dock.png'), 'Show Dock Widget', self)
+        show_dock_action.triggered.connect(self.show_dock)
+        show_dock_action.setStatusTip('Show Dock Widget')
+        show_dock_action.setShortcut('F2')
+        view_menu.addAction(show_dock_action)
+
+
         # create vertex button for action bar
         create_vertex_button = QPushButton("Create a Vertex")
         create_vertex_button.clicked.connect(self.create_vertex)
@@ -32,26 +60,22 @@ class MainWindow(QMainWindow):
         create_graph_button = QPushButton("Create a Graph")
         create_graph_button.clicked.connect(self.create_graph)
 
-        # create the widget and layout for our action bar
-        action_bar = QFrame()
-        action_bar.setObjectName("action_bar")
-        action_bar_layout = QVBoxLayout()
+        # create a dock widget for our graph options
+        self.dock = QDockWidget('Graph Options')
 
-        # add our buttons to the action bar layout
-        action_bar_layout.addWidget(create_vertex_button)
-        action_bar_layout.addWidget(create_graph_button)
-
-        # set the layout of our action bar
-        action_bar.setLayout(action_bar_layout)
-
+        # create widget for our multiple graph option actions
+        graph_options = QWidget()
+        graph_options_layout = QVBoxLayout()
+        graph_options.setLayout(graph_options_layout)
+        graph_options_layout.addWidget(create_graph_button)
+        graph_options_layout.addWidget(create_vertex_button)
 
         # the graph VISUALIZATION stuff thingy
         canvas = QFrame()
         canvas.setObjectName("canvas")
         self.canvas_layout = QHBoxLayout()
 
-        # line = QLineEdit()
-        # self.canvas_layout.addWidget(line)
+
 
         canvas.setLayout(self.canvas_layout)
 
@@ -63,7 +87,8 @@ class MainWindow(QMainWindow):
         main_container_layout = QHBoxLayout()
 
         # add our widgets to the layout
-        main_container_layout.addWidget(action_bar,1)
+        self.dock.setWidget(graph_options)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock)
         main_container_layout.addWidget(canvas,4)
 
         # set the layout of the main container
@@ -80,6 +105,10 @@ class MainWindow(QMainWindow):
 
     def create_graph(self):
         print("graph created")
+
+    def show_dock(self):
+        self.dock.show()
+
         
 
 
