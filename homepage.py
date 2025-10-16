@@ -1,7 +1,12 @@
+# %%
 from PyQt5.QtWidgets import (QApplication, 
                              QMainWindow, 
                              QPushButton, 
-                             QLineEdit,
+                             QGraphicsItem,
+                             QGraphicsEllipseItem,
+                             QGraphicsRectItem,
+                             QGraphicsScene,
+                             QGraphicsView,
                              QVBoxLayout,
                              QHBoxLayout,
                              QWidget,
@@ -12,7 +17,7 @@ from PyQt5.QtWidgets import (QApplication,
 from PyQt5.QtCore import QSize, Qt
 
 from PyQt5.QtGui import QIcon
-
+# %%
 
 import sys
 from QVertex import QVertex
@@ -52,11 +57,11 @@ class MainWindow(QMainWindow):
         view_menu.addAction(show_dock_action)
 
 
-        # create vertex button for action bar
+        # create vertex button for dock widget
         create_vertex_button = QPushButton("Create a Vertex")
         create_vertex_button.clicked.connect(self.create_vertex)
 
-        # create graph button for action bar
+        # create graph button for dock widget
         create_graph_button = QPushButton("Create a Graph")
         create_graph_button.clicked.connect(self.create_graph)
 
@@ -70,38 +75,24 @@ class MainWindow(QMainWindow):
         graph_options_layout.addWidget(create_graph_button)
         graph_options_layout.addWidget(create_vertex_button)
 
-        # the graph VISUALIZATION stuff thingy
-        canvas = QFrame()
-        canvas.setObjectName("canvas")
-        self.canvas_layout = QHBoxLayout()
-
-
-
-        canvas.setLayout(self.canvas_layout)
-
-
-
-        # create the widget and layout for our main window container
-        main_container = QFrame()
-        main_container.setObjectName("main_container")
-        main_container_layout = QHBoxLayout()
-
-        # add our widgets to the layout
+        # set the widget for the dock widget
         self.dock.setWidget(graph_options)
+
+        # add the dock widget to the app
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock)
-        main_container_layout.addWidget(canvas,4)
 
-        # set the layout of the main container
-        main_container.setLayout(main_container_layout)
+        # the graph VISUALIZATION stuff thingy
+        self.scene = QGraphicsScene(0,0,400,200)
 
-        # add the main container widget as the central widget
-        self.setCentralWidget(main_container)
+        view = QGraphicsView(self.scene)
+
+        self.setCentralWidget(view)
 
     def create_vertex(self):
         print("vertex created")
         v = QVertex()
-        v.setObjectName('vertex') 
-        self.canvas_layout.addWidget(v)
+        self.scene.addItem(v)
+
 
     def create_graph(self):
         print("graph created")
@@ -109,7 +100,10 @@ class MainWindow(QMainWindow):
     def show_dock(self):
         self.dock.show()
 
-        
+    def do_sum(self):
+        print("doin sum")
+
+    
 
 
 if __name__ == '__main__':
