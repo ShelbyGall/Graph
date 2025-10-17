@@ -6,20 +6,11 @@ import math
 
 
 class QVertex(QtWidgets.QGraphicsEllipseItem):
-    
-
-    def __init__(self):
-        super().__init__(0,0,100,100)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
-
-    def delete_vertex(self):
-        # delete GUI representation of node
-        print(self.parentItem())
-        print(self.parentWidget())
-        print(self.parentObject())
-        # TODO: delete node from the GUI
 
     def contextMenuEvent(self, event):
         print("here")
