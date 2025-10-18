@@ -21,19 +21,20 @@ class QGraphicsScene(QGraphicsScene):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.last_focus_item = None
+        self.vertex_counter = 0
 
     def mouseDoubleClickEvent(self, event):
         print("vertex created")
         
-        x = event.pos().x()
-        y = event.pos().y()
-        print(f"{x}, {y}")
-        v = QVertex(x, y, 100, 100)
+        x = event.scenePos().x() - 50
+        y = event.scenePos().y() - 50
+        v = QVertex(self.vertex_counter, x, y, 100, 100)
 
         self.addItem(v)
+        self.vertex_counter += 1
     
-    def mouseReleaseEvent(self, event):
-        print(self.selectedItems())
+    # def mouseReleaseEvent(self, event):
+    #     print(self.selectedItems())
 
 
 
