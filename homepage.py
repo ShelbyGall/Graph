@@ -16,11 +16,16 @@ import math
 import sys
 from QVertex import QVertex
 
+import Graph
+import Vertex
+
+g = Graph.Graph([])
+
 class QGraphicsScene(QGraphicsScene):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.last_focus_item = None
+        self.last_selected_item = None
         self.vertex_counter = 0
 
     def mouseDoubleClickEvent(self, event):
@@ -28,13 +33,27 @@ class QGraphicsScene(QGraphicsScene):
         
         x = event.scenePos().x() - 50
         y = event.scenePos().y() - 50
-        v = QVertex(self.vertex_counter, x, y, 100, 100)
 
-        self.addItem(v)
+        v = Vertex.Vertex(label=str(self.vertex_counter))
+        g.add_vertex(v)
+
+        # GUI representation of our newly created vertex
+        qv = QVertex(self.vertex_counter, id(v), x, y, 100, 100)
+
+        
+
+        self.addItem(qv)
         self.vertex_counter += 1
+
     
-    # def mouseReleaseEvent(self, event):
-    #     print(self.selectedItems())
+    def mousePressEvent(self, event):
+        # print(f"self: {self}")
+        # print(f"event: {event}")
+        if event.button() == Qt.LeftButton:
+            if self.selectedItems():
+                print(self.selectedItems()[0])
+        super().mousePressEvent(event)
+    
 
 
 
@@ -71,11 +90,6 @@ class MainWindow(QMainWindow):
         show_dock_action.setShortcut('F2')
         view_menu.addAction(show_dock_action)
 
-
-        # # create vertex button for dock widget
-        # create_vertex_button = QPushButton("Create a Vertex")
-        # create_vertex_button.clicked.connect(self.create_vertex)
-
         # create graph button for dock widget
         create_graph_button = QPushButton("Create a Graph")
         create_graph_button.clicked.connect(self.create_graph)
@@ -88,7 +102,6 @@ class MainWindow(QMainWindow):
         graph_options_layout = QVBoxLayout()
         graph_options.setLayout(graph_options_layout)
         graph_options_layout.addWidget(create_graph_button)
-        # graph_options_layout.addWidget(create_vertex_button)
 
         # set the widget for the dock widget
         self.dock.setWidget(graph_options)
@@ -103,13 +116,6 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(view)
 
-    
-
-    # def create_vertex(self):
-    #     print("vertex created")
-    #     v = QVertex()
-    #     self.scene.addItem(v)
-
     def create_graph(self):
         print("graph created")
 
@@ -118,9 +124,6 @@ class MainWindow(QMainWindow):
 
     def do_sum(self):
         print("doin sum")
-
-    
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
