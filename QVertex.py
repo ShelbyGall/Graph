@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QGraphicsItem, QMenu, QAction, QGraphicsTextItem, QGraphicsEllipseItem, QWidget
+from PyQt5.QtWidgets import QGraphicsItem, QMenu, QAction, QGraphicsTextItem, QGraphicsEllipseItem, QStyle
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, QPoint, QPointF
+from PyQt5.QtCore import QPoint
 import math
 
 
@@ -44,8 +44,6 @@ class QVertex(QGraphicsEllipseItem):
         point= event.widget().mapToGlobal(QPoint(x,y))
 
         context_menu.exec_(point)
-
-
 
     def setLabel(self, new_label):
         self.v_label = new_label

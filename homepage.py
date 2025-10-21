@@ -34,25 +34,57 @@ class QGraphicsScene(QGraphicsScene):
         x = event.scenePos().x() - 50
         y = event.scenePos().y() - 50
 
+        # backend vertex being added to our graph
         v = Vertex.Vertex(label=str(self.vertex_counter))
         g.add_vertex(v)
 
         # GUI representation of our newly created vertex
         qv = QVertex(self.vertex_counter, id(v), x, y, 100, 100)
-
-        
-
         self.addItem(qv)
         self.vertex_counter += 1
 
     
-    def mousePressEvent(self, event):
-        # print(f"self: {self}")
-        # print(f"event: {event}")
-        if event.button() == Qt.LeftButton:
-            if self.selectedItems():
-                print(self.selectedItems()[0])
-        super().mousePressEvent(event)
+    def mouseReleaseEvent(self, event):
+        # check it the button that triggered the event is the left mouse button
+        # and that there is an item that is currently selected
+        if event.button() == Qt.LeftButton and self.selectedItems():
+            # check if the currently selected item and the last selected item are both QVertex's and they arent the same vertex
+            if isinstance(self.selectedItems()[0], QVertex) and isinstance(self.last_selected_item, QVertex) and self.last_selected_item != self.selectedItems()[0]:
+                # if we satisfy all conditions make an edge between the two vertices
+                print(f"edge created\n{self.last_selected_item.v_label} -> {self.selectedItems()[0].v_label}")
+                
+                # TODO: add the edge to the actual backend graph 
+
+                # TODO: add the visual representation of the edge to the scene (prolly gonna need to make a QEdge)
+
+                # reset the bounding rectangle on the last selected vertex so its obvious that nothing
+                # is currently selected
+                tmp = self.selectedItems()[0]
+                tmp.setEnabled(False)
+                tmp.setEnabled(True)
+
+                # reset selection status
+                self.last_selected_item = None
+                self.clearFocus()
+                self.clearSelection()
+
+            # if the last item selected wasnt a QVertex and the currently selected item is a QVertex
+            elif self.selectedItems() and isinstance(self.selectedItems()[0], QVertex):
+                # remember it so in the future we can check if the user wants to create an edge
+                self.last_selected_item = self.selectedItems()[0]
+
+            # if no conditions satisfy clear all selection settings
+            else: 
+                self.last_selected_item = None
+                self.clearFocus()
+                self.clearSelection()
+
+        # if the either the click wasnt a left mouse click or there wasnt a selected item from the current
+        # mouse press then revert the last selected item to None
+        else:
+            self.last_selected_item = None
+
+        super().mouseReleaseEvent(event)
     
 
 
@@ -91,8 +123,8 @@ class MainWindow(QMainWindow):
         view_menu.addAction(show_dock_action)
 
         # create graph button for dock widget
-        create_graph_button = QPushButton("Create a Graph")
-        create_graph_button.clicked.connect(self.create_graph)
+        create_graph_button = QPushButton("Delete Graph")
+        create_graph_button.clicked.connect(self.delete_graph)
 
         # create a dock widget for our graph options
         self.dock = QDockWidget('Graph Options')
@@ -116,14 +148,20 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(view)
 
-    def create_graph(self):
-        print("graph created")
+    def delete_graph(self):
+        self.scene.clear()
+        g = Graph.Graph([])
+        self.scene.vertex_counter = 0
+        print(g)
+
 
     def show_dock(self):
         self.dock.show()
 
     def do_sum(self):
         print("doin sum")
+    
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
