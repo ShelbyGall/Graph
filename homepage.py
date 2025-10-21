@@ -12,9 +12,8 @@ from PyQt5.QtCore import QSize, Qt
 
 from PyQt5.QtGui import QIcon
 
-import math
 import sys
-from QVertex import QVertex
+from QGraph import QVertex
 
 import Graph
 import Vertex
@@ -51,9 +50,14 @@ class QGraphicsScene(QGraphicsScene):
             # check if the currently selected item and the last selected item are both QVertex's and they arent the same vertex
             if isinstance(self.selectedItems()[0], QVertex) and isinstance(self.last_selected_item, QVertex) and self.last_selected_item != self.selectedItems()[0]:
                 # if we satisfy all conditions make an edge between the two vertices
-                print(f"edge created\n{self.last_selected_item.v_label} -> {self.selectedItems()[0].v_label}")
+                print("edge created")
                 
-                # TODO: add the edge to the actual backend graph 
+                # add the edge to the actual backend graph 
+                # based on the id of the vertices in the GUI selected
+                # get the corresponding vertices and add the edge to the graph
+                src  = g.get_vertex_by_id(self.last_selected_item.v_id)
+                dest = g.get_vertex_by_id(self.selectedItems()[0].v_id)
+                g.add_edge(src=src, dest=dest)
 
                 # TODO: add the visual representation of the edge to the scene (prolly gonna need to make a QEdge)
 
@@ -123,8 +127,12 @@ class MainWindow(QMainWindow):
         view_menu.addAction(show_dock_action)
 
         # create graph button for dock widget
-        create_graph_button = QPushButton("Delete Graph")
-        create_graph_button.clicked.connect(self.delete_graph)
+        delete_graph_button = QPushButton("Delete Graph")
+        delete_graph_button.clicked.connect(self.delete_graph)
+
+        # print graph to the console
+        print_graph_button = QPushButton("Print Graph")
+        print_graph_button.clicked.connect(self.print_graph)
 
         # create a dock widget for our graph options
         self.dock = QDockWidget('Graph Options')
@@ -133,7 +141,8 @@ class MainWindow(QMainWindow):
         graph_options = QWidget()
         graph_options_layout = QVBoxLayout()
         graph_options.setLayout(graph_options_layout)
-        graph_options_layout.addWidget(create_graph_button)
+        graph_options_layout.addWidget(delete_graph_button)
+        graph_options_layout.addWidget(print_graph_button)
 
         # set the widget for the dock widget
         self.dock.setWidget(graph_options)
@@ -150,10 +159,11 @@ class MainWindow(QMainWindow):
 
     def delete_graph(self):
         self.scene.clear()
-        g = Graph.Graph([])
+        g.clear_graph()
         self.scene.vertex_counter = 0
-        print(g)
 
+    def print_graph(self):
+        print(g)
 
     def show_dock(self):
         self.dock.show()

@@ -1,4 +1,10 @@
-from PyQt5.QtWidgets import QGraphicsItem, QMenu, QAction, QGraphicsTextItem, QGraphicsEllipseItem, QStyle
+from PyQt5.QtWidgets import (QGraphicsItem, 
+                             QMenu, 
+                             QAction, 
+                             QGraphicsTextItem, 
+                             QGraphicsEllipseItem, 
+                             QGraphicsLineItem,
+                             )
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QPoint
 import math
@@ -7,17 +13,21 @@ import math
 class QVertex(QGraphicsEllipseItem):
     def __init__(self, label, id, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # store the label of the vertex 
         self.v_label = label
+
+        # store the python id of the vertex
         self.v_id = id
 
+        # make the QVertex moveable and selectable
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         
+        # create the text label for the QVertex object
         self.label = QGraphicsTextItem(str(self.v_label), self)
+
+        # set the position of the label on the QVertex in the GUI
         self.label.setPos(args[0]+45, args[1]+40)
-
-
-        
 
     def contextMenuEvent(self, event):
         context_menu = QMenu()
@@ -45,6 +55,11 @@ class QVertex(QGraphicsEllipseItem):
 
         context_menu.exec_(point)
 
+    
     def setLabel(self, new_label):
         self.v_label = new_label
 
+class QEdge(QGraphicsLineItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        

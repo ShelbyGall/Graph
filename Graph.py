@@ -7,8 +7,6 @@ from DisjointSet import DisjointSet
 
 
 class Graph:
-
-
     def __init__(self, vertices: list, edges: dict=None):
         self.vertices = vertices
         if edges == None:
@@ -77,7 +75,8 @@ class Graph:
                 if e[0] == src and e[1] == dest:
                     curr_edges.remove(e)
             
-        
+    def clear_graph(self) -> None:
+        self.__init__([])
 
 
     def get_edges(self) -> list:
@@ -89,7 +88,14 @@ class Graph:
                 # add it to a list
                 all_edges.append(e)
         return all_edges
-
+    
+    def get_vertex_by_id(self, v_id: int) -> v:
+        # iterate through all vertices in the graph
+        for v in self.vertices:
+            # if the current vertex's id is he given 
+            # id then return the current vertex
+            if id(v) == v_id:
+                return v
 
     def is_connected(self, src: v, dest: v) -> bool:
         # get the list of edges in the dict at the src key
