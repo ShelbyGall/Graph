@@ -14,3 +14,4 @@ class Vertex:
     
     def __repr__(self) -> str:
         return f"{self.label}|{self.data}"
+

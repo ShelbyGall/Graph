@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import (QGraphicsItem,
                              QGraphicsEllipseItem, 
                              QGraphicsLineItem,
                              )
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QPoint
+from PyQt5.QtGui import QIcon, QPainter
+from PyQt5.QtCore import QPoint, QRectF
 import math
 
 
@@ -59,7 +59,30 @@ class QVertex(QGraphicsEllipseItem):
     def setLabel(self, new_label):
         self.v_label = new_label
 
-class QEdge(QGraphicsLineItem):
-    def __init__(self, *args, **kwargs):
+class QEdge(QGraphicsItem):
+    def __init__(self, src_id, dest_id, src, dest, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.src_id = src_id
+        self.dest_id = dest_id
+        self.q_src = src
+        self.q_dest = dest
+        self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.paint()
+        
+    def boundingRect(self):
+       
+        return QRectF(50,50, 100,100)
+
+    def paint(self, *args):
+        src_x = math.floor(self.q_src.pos().x())
+        src_y = math.floor(self.q_src.pos().y())
+        dest_x = math.floor(self.q_dest.pos().x())
+        dest_y = math.floor(self.q_dest.pos().y())
+
+        painter = QPainter()
+        print(f'{src_x}, {src_y}, {dest_x}, {dest_y}')
+        painter.drawLine(src_x, src_y, dest_x, dest_y)
+
+    def paintEvent(self, event):
+        self.paint()
         

@@ -13,7 +13,7 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
 
 import sys
-from QGraph import QVertex
+from QGraph import QVertex, QEdge
 
 import Graph
 import Vertex
@@ -60,6 +60,12 @@ class QGraphicsScene(QGraphicsScene):
                 g.add_edge(src=src, dest=dest)
 
                 # TODO: add the visual representation of the edge to the scene (prolly gonna need to make a QEdge)
+                print(self.last_selected_item)
+                QEdge(self.last_selected_item.v_id, 
+                      self.selectedItems()[0].v_id, 
+                      self.last_selected_item, 
+                      self.selectedItems()[0], 
+                      self.last_selected_item)
 
                 # reset the bounding rectangle on the last selected vertex so its obvious that nothing
                 # is currently selected
@@ -182,5 +188,4 @@ if __name__ == '__main__':
 
     window = MainWindow()
     window.show()
-
-    app.exec()
+    sys.exit(app.exec_())
