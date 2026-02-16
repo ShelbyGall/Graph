@@ -1,10 +1,28 @@
 # Brain Book
 Since I keep forgetting things due to breaks in development, im going to use the top part of this markdown document as a sort of brain book for how im developing this project. Basically everything above the "Graph" header is going to be brain book material that I will later condense as necessary to become the final README.md
 
-- GUI
-    - im cooked basically
-- CICD pipeline
-- optimizations
+Duplicate labels of vertices might be difficult to get around, might need to restrict graphs to have no duplicate labels
+
+Mandatory:
+- unit tests
+- Import unittests
+- CI/CD pipeline
+- GUIS
+- disjoint set optimization
+- topological sort
+- sphinx documentation
+- application - look at phone link for ideas
+
+Optional:
+- prims mst
+- Docker???
+
+
+Need to learn
+- Docker/containerization
+- kubernetes
+- golang
+- bash
 
 # Graph
 A simple Graph implementation in python
