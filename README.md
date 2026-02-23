@@ -5,9 +5,9 @@ Duplicate labels of vertices might be difficult to get around, might need to res
 
 Mandatory:
 - unit tests
-- Import unittests
+    - currently using unittests, going to try to set up as much testing as I can
 - CI/CD pipeline
-- GUIS
+- GUIS : going to return to this after getting ahold of unit testing
 - disjoint set optimization
 - topological sort
 - sphinx documentation
