@@ -3,10 +3,13 @@ import Vertex as v
 from collections import deque
 import heapq
 from DisjointSet import DisjointSet
+import warnings
 
 
 
 class Graph:
+
+
     def __init__(self, vertices: list, edges: dict=None):
         self.vertices = vertices
         if edges == None:
@@ -50,7 +53,12 @@ class Graph:
     def add_edge(self, src: v, dest: v, weight: float=None, directed: bool=True) -> None:
         # if either the src or dest vertices arent in the graph, dont add the edge
         if (self.edges.get(src) == None) or (self.edges.get(dest) == None):
-            print("Error: Vertex not in graph")
+            miss_verts = []
+            if self.edges.get(src) == None:
+                miss_verts.append(src.label)
+            if self.edges.get(dest) == None:
+                miss_verts.append(dest.label)
+            warnings.warn(f'Error: Vertices {miss_verts} not in Graph', UserWarning)
             return 
         
         # if the src and dest vertices aren't already connected, add the edge
@@ -75,8 +83,7 @@ class Graph:
                 if e[0] == src and e[1] == dest:
                     curr_edges.remove(e)
             
-    def clear_graph(self) -> None:
-        self.__init__([])
+        
 
 
     def get_edges(self) -> list:
@@ -88,14 +95,7 @@ class Graph:
                 # add it to a list
                 all_edges.append(e)
         return all_edges
-    
-    def get_vertex_by_id(self, v_id: int) -> v:
-        # iterate through all vertices in the graph
-        for v in self.vertices:
-            # if the current vertex's id is he given 
-            # id then return the current vertex
-            if id(v) == v_id:
-                return v
+
 
     def is_connected(self, src: v, dest: v) -> bool:
         # get the list of edges in the dict at the src key
@@ -375,94 +375,3 @@ class Graph:
     
     def __repr__(self) -> str:
         return f"graph: {self.vertices}"
-
-
-
-    
-
-# #%%
-
-# v1 = v.Vertex('1')
-# v2 = v.Vertex('2')
-# v3 = v.Vertex('3')
-# v4 = v.Vertex('4')
-# v5 = v.Vertex('5')
-# v6 = v.Vertex('6')
-# v7 = v.Vertex('7')
-# v8 = v.Vertex('8')
-
-# print(v1)
-# print(v2)
-# #%%
-# vertices = [v1,v2,v3,v4]
-
-# my_graph = Graph(vertices=vertices)
-
-# my_graph.add_edge(src=v1, dest=v3, directed=False)
-# my_graph.add_edge(src=v3, dest=v2)
-# my_graph.add_edge(src=v4, dest=v1)
-
-# my_graph.add_edge(src=v5, dest=v2)
-
-# print(my_graph)
-
-# vertices2 = [v1,v2,v3,v4,v5,v6,v7,v8]
-# g2 = Graph(vertices=vertices2)
-
-# g2.add_edge(src=v1, dest=v2, directed=False)
-# g2.add_edge(src=v1, dest=v3, directed=False)
-# g2.add_edge(src=v1, dest=v4, directed=False)
-
-# g2.add_edge(src=v3, dest=v6, directed=False)
-# g2.add_edge(src=v3, dest=v7, directed=False)
-# g2.add_edge(src=v4, dest=v7, directed=False)
-
-# g2.add_edge(src=v6, dest=v8, directed=False)
-
-# g2.bfs(v1,v8)
-# print()
-# g2.dfs(v1,v8)
-# print()
-# g2.dfs_recursive(v1,v8)
-# print()
-
-# v999 = v.Vertex('999')
-# g2.add_vertex(v999)
-
-# g2.bfs(v1,v999)
-# print()
-# g2.dfs(v1,v999)
-# print()
-# g2.dfs_recursive(v1,v999)
-# print()
-# # %%
-
-# g3 = Graph(vertices=[v1,v2,v3,v4,v5])
-
-# g3.add_edge(src=v1, dest=v2, weight=10,directed=False)
-# g3.add_edge(src=v1, dest=v3, weight=1,directed=False)
-# g3.add_edge(src=v1, dest=v4, weight=10,directed=False)
-
-# g3.add_edge(src=v2, dest=v5, weight=3,directed=False)
-
-# g3.add_edge(src=v3, dest=v5, weight=15,directed=False)
-
-# g3.add_edge(src=v4, dest=v3, weight=1,directed=False)
-
-# w, path  = g3.shortest_path(v1,v2)
-# # %%
-# g4 = Graph(vertices=[v1,v2,v3,v4,v5])
-
-# g4.add_edge(src=v1, dest=v2, weight=11,directed=False)
-# g4.add_edge(src=v1, dest=v3, weight=1,directed=False)
-# g4.add_edge(src=v1, dest=v4, weight=12,directed=False)
-
-# g4.add_edge(src=v2, dest=v5, weight=3,directed=False)
-
-# g4.add_edge(src=v3, dest=v5, weight=15,directed=False)
-
-# g4.add_edge(src=v4, dest=v3, weight=2,directed=False)
-
-# w, path  = g4.shortest_path(v1,v2)
-
-# %%

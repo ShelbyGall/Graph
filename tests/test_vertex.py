@@ -13,7 +13,7 @@ class TestVertex(unittest.TestCase):
     # Testing Vertices where the data attribute is populated
     # Testing what happens where the full vertex is initialized
     def test_vertex_full_init(self):
-        self.assertIsInstance(self.full_vertex, V)
+        self.assertIsInstance(self.full_vertex, V.Vertex)
         self.assertTrue(hasattr(self.full_vertex, "label"))
 
     # Testing vertex label for the full vertex
@@ -37,7 +37,7 @@ class TestVertex(unittest.TestCase):
     # Testing Vertices where the data attribute is NOT populated
     # Testing what happens where the empty vertex is initialized
     def test_vertex_empty_init(self):
-        self.assertIsInstance(self.empty_vertex, V)
+        self.assertIsInstance(self.empty_vertex, V.Vertex)
         self.assertTrue(hasattr(self.empty_vertex, "label"))
 
     # Testing vertex label for the empty vertex
@@ -48,12 +48,12 @@ class TestVertex(unittest.TestCase):
 
     # Testing vertex data for the empty vertex
     def test_empty_vertex_data(self):
-        self.assertFalse(hasattr(self.empty_vertex, "data"))
-        self.assertIsInstance(self.empty_vertex.get_data(), None)
+        self.assertTrue(hasattr(self.empty_vertex, "data"))
+        self.assertIsNone(self.empty_vertex.get_data())
 
     # Testing vertex string representation
     def test_empty_vertex_str(self):
-        self.assertEqual(str(self.empty_vertex),"Empty|{None}")
+        self.assertEqual(str(self.empty_vertex),"Empty|None")
 
 if __name__ == "__main__":
     unittest.main()
