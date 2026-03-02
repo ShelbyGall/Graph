@@ -12,40 +12,41 @@ class TestGraph(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.v1 = V.Vertex('1')
-        cls.v2 = V.Vertex('2')
-        cls.v3 = V.Vertex('3')
-        cls.v4 = V.Vertex('4')
-        cls.v5 = V.Vertex('5')
-        cls.v6 = V.Vertex('6')
-        cls.v7 = V.Vertex('7')
-        cls.v8 = V.Vertex('8')
+        v1 = V.Vertex('1')
+        v2 = V.Vertex('2')
+        v3 = V.Vertex('3')
+        v4 = V.Vertex('4')
+        v5 = V.Vertex('5')
+        v6 = V.Vertex('6')
+        v7 = V.Vertex('7')
+        v8 = V.Vertex('8')
+        v999 = V.Vertex('999')
 
-        cls.vertices = [cls.v1,
-                        cls.v2,
-                        cls.v3,
-                        cls.v4]
-        cls.no_edge_graph = G.Graph(vertices=cls.vertices)
+        vertices = [v1,
+                        v2,
+                        v3,
+                        v4]
+        no_edge_graph = G.Graph(vertices=vertices)
 
-        cls.pop_edge_graph = G.Graph(vertices=cls.vertices)
+        pop_edge_graph = G.Graph(vertices=vertices)
 
-        cls.pop_edge_graph.add_edge(src=cls.v1, dest=cls.v3, directed=False)
-        cls.pop_edge_graph.add_edge(src=cls.v3, dest=cls.v2)
-        cls.pop_edge_graph.add_edge(src=cls.v4, dest=cls.v1)
-        cls.pop_edge_graph.add_edge(src=cls.v1, dest=cls.v3, directed=False)
-        cls.pop_edge_graph.add_edge(src=cls.v3, dest=cls.v2)
-        cls.pop_edge_graph.add_edge(src=cls.v4, dest=cls.v1)
+        pop_edge_graph.add_edge(src=v1, dest=v3, directed=False)
+        pop_edge_graph.add_edge(src=v3, dest=v2)
+        pop_edge_graph.add_edge(src=v4, dest=v1)
+        pop_edge_graph.add_edge(src=v1, dest=v3, directed=False)
+        pop_edge_graph.add_edge(src=v3, dest=v2)
+        pop_edge_graph.add_edge(src=v4, dest=v1)
 
-        cls.vertices2 = [cls.v1,cls.v2,cls.v3,cls.v4,cls.v5,cls.v6,cls.v7,cls.v8]
-        cls.g2 = G.Graph(vertices=cls.vertices2)
+        vertices2 = [v1,v2,v3,v4,v5,v6,v7,v8]
+        g2 = G.Graph(vertices=vertices2)
 
-        cls.g2.add_edge(src=cls.v1, dest=cls.v2, directed=False)
-        cls.g2.add_edge(src=cls.v1, dest=cls.v3, directed=False)
-        cls.g2.add_edge(src=cls.v1, dest=cls.v4, directed=False)
-        cls.g2.add_edge(src=cls.v3, dest=cls.v6, directed=False)
-        cls.g2.add_edge(src=cls.v3, dest=cls.v7, directed=False)
-        cls.g2.add_edge(src=cls.v4, dest=cls.v7, directed=False)
-        cls.g2.add_edge(src=cls.v6, dest=cls.v8, directed=False)
+        g2.add_edge(src=v1, dest=v2, directed=False)
+        g2.add_edge(src=v1, dest=v3, directed=False)
+        g2.add_edge(src=v1, dest=v4, directed=False)
+        g2.add_edge(src=v3, dest=v6, directed=False)
+        g2.add_edge(src=v3, dest=v7, directed=False)
+        g2.add_edge(src=v4, dest=v7, directed=False)
+        g2.add_edge(src=v6, dest=v8, directed=False)
 
     def test_no_edge_graph_init(self):
         self.assertTrue(hasattr(self.no_edge_graph, "vertices"))
@@ -75,26 +76,50 @@ class TestGraph(unittest.TestCase):
     def test_bfs(self):
         self.g2.bfs(self.v1,self.v8)
 
+        self.g2.add_vertex(self.v999)
+        self.g2.bfs(self.v1,self.v999)
 
-# print()
-# g2.dfs(self.v1,self.v8)
-# print()
-# g2.dfs_recursive(self.v1,self.v8)
+        self.g2.delete_vertex(self.v999)
 
-# print()
+    def test_dfs(self):
+        self.g2.dfs(self.v1,self.v8)
 
-# v999 = V.Vertex('999')
-# g2.add_vertex(v999)
-
-# g2.bfs(self.v1,v999)
-# print()
-# g2.dfs(self.v1,v999)
-# print()
-# g2.dfs_recursive(self.v1,v999)
-# print()
+        self.g2.add_vertex(self.v999)
+        self.g2.dfs(self.v1,self.v999)
 
 
-# g3 = Graph(vertices=[v1,v2,v3,v4,v5])
+        self.g2.delete_vertex(self.v999)
+
+    def test_dfs_recursive(self):
+        self.g2.dfs_recursive(self.v1, self.v8) 
+        self.g2.dfs_recursive(self.v1,self.v999)
+
+
+# %%
+v1 = V.Vertex('1')
+v2 = V.Vertex('2')
+v3 = V.Vertex('3')
+v4 = V.Vertex('4')
+v5 = V.Vertex('5')
+v6 = V.Vertex('6')
+v7 = V.Vertex('7')
+v8 = V.Vertex('8')
+v999 = V.Vertex('999')
+vertices2 = [v1,v2,v3,v4,v5,v6,v7,v8]
+g2 = G.Graph(vertices=vertices2)
+
+g2.add_edge(src=v1, dest=v2, directed=False)
+g2.add_edge(src=v1, dest=v3, directed=False)
+g2.add_edge(src=v1, dest=v4, directed=False)
+g2.add_edge(src=v3, dest=v6, directed=False)
+g2.add_edge(src=v3, dest=v7, directed=False)
+g2.add_edge(src=v4, dest=v7, directed=False)
+g2.add_edge(src=v6, dest=v8, directed=False)
+
+g2.bfs(v1,v8)
+
+
+# g3 = G.Graph(vertices=[v1,v2,v3,v4,v5])
 
 # g3.add_edge(src=v1, dest=v2, weight=10,directed=False)
 # g3.add_edge(src=v1, dest=v3, weight=1,directed=False)
